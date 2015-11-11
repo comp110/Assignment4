@@ -2,7 +2,7 @@ package com.comp110.instagram;
 
 public class Color {
   
-  // TODO: Define private instance variables
+  // TODO: 2.2 - Define private instance variables
   
   public Color() {
     this.setRed(1.0);
@@ -20,6 +20,6 @@ public class Color {
     return "Color("+this.getRed()+","+this.getGreen()+","+this.getBlue()+")";
   }
   
-  // TODO: Add other instance definitions
+  // TODO: 2.3, 2.4 - Add other instance definitions
   
 }
