@@ -47,9 +47,9 @@ public class Assignment4A {
        =====================
 
      When *all* of your tests pass, welcome to 
-     // It's time for your
-     first "Black Triangle" moment... 
-     (see http://rampantgames.com/blog/?p=7745 )
+     It's time for your first 
+     "Black Triangle" moment
+     ( http://rampantgames.com/blog/?p=7745 )
      Uncomment the lines below... */
 
 //    Image image = new Image(512, 512);

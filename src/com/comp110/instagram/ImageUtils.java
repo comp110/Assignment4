@@ -32,12 +32,12 @@ public class ImageUtils {
   }
   
   static void drawTriangle(Image image, int xStart, int yStart, int height) {
-    Color black = new Color(0,0,0);
+    Color bestColor = new Color(0.482,0.686,0.831);
     for(int y = 0; y < height; y++) {
       for(int x = 0; x < y + 1; x++) {
         int yOffset = yStart + y;
         int xOffset = xStart - y / 2 + x;
-        image.setPixel(xOffset, yOffset, black);
+        image.setPixel(xOffset, yOffset, bestColor);
       }
     }
   }
