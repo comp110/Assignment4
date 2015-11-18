@@ -18,7 +18,7 @@ import javax.imageio.ImageIO;
 
 public class ImageUtils {
   
-  static void drawTriangles(Image image) {
+  public static void drawTriangles(Image image) {
     int midpointX = image.getWidth() / 2;
     int midpointY = image.getHeight() / 2;
     int size      = image.getHeight() / 8;
@@ -31,7 +31,7 @@ public class ImageUtils {
     drawTriangle(image, midpointX + halfSize + wilsonXOffset, midpointY + wilsonYOffset, size);
   }
   
-  static void drawTriangle(Image image, int xStart, int yStart, int height) {
+  public static void drawTriangle(Image image, int xStart, int yStart, int height) {
     Color bestColor = new Color(0.482,0.686,0.831);
     for(int y = 0; y < height; y++) {
       for(int x = 0; x < y + 1; x++) {
@@ -42,13 +42,41 @@ public class ImageUtils {
     }
   }
   
+  public static void checkerboard(Image image, int cells, Color light, Color dark) {
+    int squareWidth   = image.getWidth()  / cells;
+    int squareHeight  = image.getHeight() / cells;
+    for(int x = 0; x < image.getWidth(); x++) {
+      for(int y = 0; y < image.getHeight(); y++) {
+        int xCell = x % (2 * squareWidth);
+        int yCell = y % (2 * squareWidth);
+        boolean isLight;
+        if(xCell < squareWidth) {
+          isLight = true;
+        } else {
+          isLight = false;
+        }
+        if(yCell >= squareHeight) {
+          isLight = !isLight;
+        }
+        if(isLight) {
+          image.setPixel(x, y, light);
+        } else {
+          image.setPixel(x, y, dark);
+        }
+      }
+    }
+  }
   
-  // Loading a photo from disk into an instance of your Image class is a little hairy.
+  // Loading/saving a photo from disk into an instance of your Image class is a little hairy.
   // Lots of Java classes and gorp required to scale down the photo to fit the size of
   // the image you're populating. Proceed with caution (and maybe shield your eyes!)
-  static void loadPhoto(Image image, String photoPath) {
+  public static void loadPhoto(Image image, String photoPath) {
+    loadPhoto(image, new File(photoPath));
+  }
+  
+  public static void loadPhoto(Image image, File photo) {
     try {
-      BufferedImage input = ImageIO.read(new File(photoPath));
+      BufferedImage input = ImageIO.read(photo);
       BufferedImage scaled = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
       AffineTransform t = new AffineTransform();
       t.scale((double)image.getWidth()/(double)input.getWidth(), (double)image.getHeight()/(double)input.getWidth());
@@ -63,7 +91,34 @@ public class ImageUtils {
           }
       }
     } catch(IOException e) {
-      System.out.println("Could not find photo " + photoPath);
+      e.printStackTrace();
+      System.err.println(e.getMessage());
+      System.out.println("Could not find photo " + photo.getAbsolutePath());
+      System.exit(1);
+    }
+  }
+  
+  public static void savePhoto(Image image, String photoPath) {
+    loadPhoto(image, new File(photoPath));
+  }
+  
+  public static void savePhoto(Image image, File photo) {
+    try {
+      BufferedImage output = new BufferedImage(
+          image.getWidth(),
+          image.getHeight(),
+          BufferedImage.TYPE_INT_RGB
+      );
+      for(int x = 0; x < image.getWidth(); x++) {
+          for(int y = 0; y < image.getHeight(); y++) {
+            Color pixel = image.getPixel(x, y);
+            java.awt.Color awtColor = new java.awt.Color((float)pixel.getRed(),(float)pixel.getGreen(),(float)pixel.getBlue());
+            output.setRGB(x, y, awtColor.getRGB());
+          }
+      }
+      ImageIO.write(output, "jpg", photo);
+    } catch(IOException e) {
+      e.printStackTrace();
       System.exit(1);
     }
   }
